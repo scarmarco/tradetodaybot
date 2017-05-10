@@ -1,8 +1,8 @@
 const TelegramBot = require('node-telegram-bot-api');
 const mongoose = require('mongoose');
 const config = require('./config');
-const UserModel = require('./user');
-const TransactionModel = require('./transaction');
+const UserModel = require('./models/user');
+const TransactionModel = require('./models/transaction');
 
 // SETUP
 
