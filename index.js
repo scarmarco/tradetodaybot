@@ -23,10 +23,13 @@ function notToday(msg, user) {
 }
 
 function newParticipant(msg) {
-  msg.new_chat_members.forEach((member) => {
-    const newUser = new UserModel({ telegram: member.username });
-    newUser.save(returnIfErr);
-  });
+  const chatId = +config.chat_id;
+  if (msg.chat.id === chatId) {
+    msg.new_chat_members.forEach((member) => {
+      const newUser = new UserModel({ telegram: member.username });
+      newUser.save(returnIfErr);
+    });
+  }
 }
 
 
