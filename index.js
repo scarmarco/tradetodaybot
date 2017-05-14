@@ -40,7 +40,8 @@ function refs(msg) {
     UserModel.findOne({ telegram: query }, (err, user) => {
       if (err) return err;
       if (user) {
-        bot.sendMessage(msg.chat.id, `@${query} tiene ${user.refs.length} referencias y ${user.trades.length} intercambios.`);
+        const tradeNumber = Math.floor(user.trades.length / 2);
+        bot.sendMessage(msg.chat.id, `@${query} tiene ${user.refs.length} referencias y ${tradeNumber} intercambios.`);
       } else {
         notToday(msg, query);
       }
@@ -59,16 +60,26 @@ function addRefs(msg) {
     if (to !== from) {
       UserModel.find().or([{ telegram: to }, { telegram: from }]).exec((err, users) => {
         if (err) return err;
-        const [referred, referral] = users;
-        if (referred && referral) {
-          referred.refs.push(from);
-          referral.refs.push(to);
-          referred.refs = Array.from(new Set(referred.refs));
-          referral.refs = Array.from(new Set(referral.refs));
-          referred.trades.push({ from, to, price });
-          referral.trades.push({ from, to, price });
-          referral.save(returnIfErr);
-          referred.save(returnIfErr);
+        const [user1, user2] = users;
+        if (user1 && user2) {
+          if (user1.telegram === from) {
+            user1.refs.push(to);
+          }
+          if (user1.telegram === to) {
+            user1.refs.push(from);
+          }
+          if (user2.telegram === from) {
+            user2.refs.push(to);
+          }
+          if (user2.telegram === to) {
+            user2.refs.push(from);
+          }
+          user1.refs = Array.from(new Set(user1.refs));
+          user2.refs = Array.from(new Set(user2.refs));
+          user1.trades.push({ from, to, price });
+          user2.trades.push({ from, to, price });
+          user2.save(returnIfErr);
+          user1.save(returnIfErr);
           const newTransaction = new TransactionModel({ from, to, price });
           newTransaction.save(returnIfErr);
           bot.sendMessage(msg.chat.id, `Ha ocurrido un intercambio entre @${from} y @${to}.`);
