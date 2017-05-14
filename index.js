@@ -107,7 +107,7 @@ function halp(msg) {
   Uso del bot:
   /refs @usuario Para pedir referencias de un usuario. (Se puede hacer por privado al bot)
   /addref @usuario PRECIO Dar referencia a otro usuario (precio es opcional)
-  IMPORTANTE: Sólo se pueden hacer desde el grupo y los dós usuarios deben agregar la transacción sino no se verá reflejada.
+  IMPORTANTE: Sólo se pueden hacer desde el grupo y los dos usuarios deben agregar la transacción sino no se verá reflejada.
   /toptrades Las últimas 10 transacciones.
   /help Ayuda.
 
